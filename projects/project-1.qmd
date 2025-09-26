@@ -6,7 +6,7 @@ categories: [GitHub, Streamlit, Claude Code]
 
 ## Overview
 
-This project involved using Claude Code to write the code to needed to deveop an app called FlipCalc
+This project involved using Claude Code to write the code to develop an app called FlipCalc.
 
 FlipCalc helps quickly evaluate whether a furniture flip is worth pursuing by calculating target list price, expected sell price, and profit margins from a few simple inputs. It streamlines decision-making by applying realistic marketplace discounts, date-based listing guidance, and rounding logic to reflect how items actually sell on platforms like Facebook Marketplace.
 
@@ -32,10 +32,8 @@ FlipCalc helps quickly evaluate whether a furniture flip is worth pursuing by ca
   </a>
 </div>
 
-<iframe src="https://flipcalc-demo.streamlit.app/?embed=true"
+<iframe src="https://flipcalc-demo.streamlit.app/"
         style="width:100%; height:900px; border:none;"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        sandbox="allow-scripts allow-same-origin allow-forms"
         allowfullscreen>
 </iframe>
 
@@ -43,7 +41,7 @@ FlipCalc helps quickly evaluate whether a furniture flip is worth pursuing by ca
 
 Framework/Stack: Quarto, Streamlit
 
-Deployment: GitHub Pages, Streamlitx
+Deployment: GitHub Pages, Streamlit
 
 Tools Used: Claude Code, ChatGPT (5)
 
