@@ -1,17 +1,19 @@
 ---
 title: "About Me"
+description: "Portfolio and projects for Elijah Corless"
+image: images/profile.jpg
 ---
 
 ::: {.hero-banner .text-center}
 
-<img src="images/profile.jpg" alt="add photo to /images" class="rounded-circle mb-3" width="160">
+<img src="images/profile.jpg" alt="Elijah Corless" class="rounded-circle mb-3" width="160">
 
-<h1>Your Name</h1>
+<h1>Elijah Corless</h1>
 
-<a href="https://linkedin.com/in/your-profile" class="btn btn-outline-primary btn-sm" target="_blank">
+<a href="https://linkedin.com/in/elijahcorless" class="btn btn-outline-primary btn-sm" target="_blank">
   <i class="fab fa-linkedin"></i> LinkedIn
 </a>
-<a href="https://github.com/your-username" class="btn btn-outline-primary btn-sm" target="_blank">
+<a href="https://github.com/ender-wiggin-hq" class="btn btn-outline-primary btn-sm" target="_blank">
   <i class="fab fa-github"></i> GitHub
 </a>
 
@@ -19,45 +21,52 @@ title: "About Me"
 
 ## Background
 
-Write a compelling narrative about your background, education, and what drives your passion for product management. This is your chance to tell your story and connect with potential employers or collaborators.
+Elijah Corless is a driven business strategist and hybrid athlete with a passion for solving complex problems at the intersection of strategy, technology, and people. He is currently pursuing a B.S. in Business Management with a minor in Psychology at Brigham Young University’s Marriott School of Business.  
+
+At BYU, Elijah serves as President of the Management Consulting Association, leading initiatives to prepare students for careers in management consulting. He combines his academic training with hands-on leadership, mentoring peers and coordinating events that bridge classroom learning with real-world strategy.  
+
+Elijah brings a unique blend of **strategic rigor and entrepreneurial execution**. His professional experience spans top-tier consulting and international marketing, including Summer Business Analyst role at McKinsey & Company and International Marketing Analyst Intern with Melaleuca.  
+
+---
 
 ### Education
 
-- **Degree Name**, University Name (Year)
-- **Relevant Coursework**: List key courses related to product management, analytics, or business
-- **Academic Achievements**: Honor societies, relevant projects, or awards
+- **B.S. Business Management, Minor in Psychology**  
+  Brigham Young University – Marriott School of Business (Expected 2025)  
+- **Academic Leadership:** President, Management Consulting Association  
+- **Scholarships & Recognition:** Marriott School merit scholarships  
+
+---
 
 ### Experience
 
-#### Job/Internship Title - Company Name
-*Dates*
+#### Summer Business Analyst – McKinsey & Company
+*Summer 2025*  
+- Worked on high-impact client projects addressing strategic and operational challenges.  
+- Developed skills in structured problem solving, financial modeling, and executive communication.  
+- Collaborated with cross-functional teams to deliver recommendations with measurable outcomes.  
 
-- Key accomplishment or responsibility
-- Another achievement with quantifiable results
-- Skills or technologies used
+#### International Marketing Analyst Intern – Melaleuca
+*Summer 2024*  
+- Conducted international market analysis to support customer retention strategies.  
+- Proposed solutions to improve global customer experience and engagement.  
+- Collaborated with leadership to evaluate growth opportunities across multiple markets.  
 
-#### Another Position - Company Name
-*Dates*
+#### President – BYU Management Consulting Association
+*2024–Present*  
+- Lead the primary consulting student organization at BYU, coordinating recruiting prep, case practice, and networking events.  
+- Mentor students preparing for MBB and top-tier consulting interviews.  
+- Partner with alumni and industry professionals to strengthen BYU’s consulting pipeline.  
 
-- What you contributed to the organization
-- Projects you worked on
-- Impact you made
+---
 
-### Skills & Interests
+## Projects
 
-**Technical Skills**
-- Programming languages (Python, R, SQL)
-- Analytics tools (Tableau, Power BI, Google Analytics)
-- Product management tools (Jira, Confluence, Figma)
+### FlipCalc – Furniture Resale Calculator
+An interactive app built with Python and Streamlit to evaluate furniture flipping ROI, timing, and pricing strategy.
 
-**Soft Skills**
-- Communication and presentation
-- Cross-functional collaboration
-- Strategic thinking and problem-solving
-
-**Interests**
-Share what you're passionate about outside of work - this helps humanize your professional brand and can be great conversation starters.
-
-### What's Next
-
-Describe your career goals and what type of opportunities you're seeking. This helps visitors understand how they might work with you or whether you'd be a good fit for their organization.
+<iframe src="https://flipcalc-demo.streamlit.app/?embed=true"
+        width="100%" height="600" style="border:none;"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        sandbox="allow-scripts allow-same-origin allow-forms">
+</iframe>

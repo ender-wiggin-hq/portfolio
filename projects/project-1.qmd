@@ -1,24 +1,21 @@
 ---
-title: "Name of the application I have published for Homework 1"
-date: "2024-09-15"
-categories: [GitHub, Vercel, Claude Code]
+title: "FlipCalc - HW 1"
+date: "2024-09-25"
+categories: [GitHub, Streamlit, Claude Code]
 ---
 
 ## Overview
 
-This project involved using Claude Code to write the code to needed to deveop an app that ...
+This project involved using Claude Code to write the code to needed to deveop an app called FlipCalc
 
-The primary purpose of this app is to:
-
-- ....
-- ....
+FlipCalc helps quickly evaluate whether a furniture flip is worth pursuing by calculating target list price, expected sell price, and profit margins from a few simple inputs. It streamlines decision-making by applying realistic marketplace discounts, date-based listing guidance, and rounding logic to reflect how items actually sell on platforms like Facebook Marketplace.
 
 ## Live Product Demo
 
 <div class="d-flex justify-content-center gap-3 my-4">
   <!-- Open App button -->
   <a class="btn btn-primary d-inline-flex align-items-center"
-     href="https://tetris-game-egc6.vercel.app/"
+     href="https://flipcalc-demo.streamlit.app/"
      target="_blank" rel="noopener"
      aria-label="Open live app">
     <i class="fa-solid fa-window-restore me-2" aria-hidden="true"></i>
@@ -27,7 +24,7 @@ The primary purpose of this app is to:
 
   <!-- GitHub Source button -->
   <a class="btn btn-outline-dark d-inline-flex align-items-center"
-     href="https://github.com/your-user/your-repo"
+     href="https://github.com/ender-wiggin-hq/flipcalc"
      target="_blank" rel="noopener"
      aria-label="Open GitHub source">
     <i class="fa-brands fa-github me-2" aria-hidden="true"></i>
@@ -35,20 +32,398 @@ The primary purpose of this app is to:
   </a>
 </div>
 
-<iframe src="https://tetris-game-egc6.vercel.app/"
+<iframe src="https://flipcalc-demo.streamlit.app/?embed=true"
         style="width:100%; height:900px; border:none;"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        sandbox="allow-scripts allow-same-origin allow-forms"
         allowfullscreen>
 </iframe>
 
 ## Technical Details
 
-Framework/Stack: [e.g., React, Quarto, HTML/CSS/JS]
+Framework/Stack: Quarto, Streamlit
 
-Deployment: GitHub Pages + Vercel
+Deployment: GitHub Pages, Streamlitx
 
-Tools Used:
--   Claude Code
+Tools Used: Claude Code, ChatGPT (5)
 
 ## Product Requirements Document
 
-Paste in the PRD that you submitted to Claude Code
+Here is the PRD that I submitted to Claude Code (formualated with help of ChatGPT)
+
+Here’s a single, ready-to-paste task block for Claude Code. It tells Claude to scaffold the project and fill in working files with your exact MVP spec.
+
+---
+
+**CLAUDE TASK — Create “FlipCalc – List/Sell Planner” (MVP)**
+
+Create a new project folder named `flipcalc_mvp` with the following files and contents. After creating the files, run `pip install -r requirements.txt` and `streamlit run app.py` to verify.
+
+### File tree
+
+```
+flipcalc_mvp/
+  app.py
+  calc.py
+  styles.py
+  requirements.txt
+  README.md
+```
+
+---
+
+### `requirements.txt`
+
+```
+streamlit==1.*
+python-dateutil
+```
+
+---
+
+### `calc.py`
+
+```python
+from __future__ import annotations
+from datetime import date, timedelta
+
+DISCOUNT_DEFAULT = 0.15  # 15% static discount from list -> sell
+LIST_LEAD_DAYS = 14      # list 14 days before sell-by
+
+def round_to_nearest_5(x: float) -> int:
+    """Round to the nearest $5 increment."""
+    return int(round(x / 5.0)) * 5
+
+def format_date_long(d: date) -> str:
+    """
+    Format like 'September 25, 2025' in a cross-platform way.
+    Avoids %-d / %#d differences by inserting the day manually.
+    """
+    return d.strftime(f"%B {d.day}, %Y")
+
+def compute_prices(purchase_price: float, percent_increase: int, discount: float = DISCOUNT_DEFAULT) -> dict:
+    """
+    Linear % increase (not CAGR). Discount applies from List -> Sell.
+    Rounds List and Sell prices to nearest $5, and uses rounded Sell for Profit.
+    Returns dict with sell_price, list_price, profit (all ints).
+    """
+    if purchase_price < 0:
+        raise ValueError("Purchase price must be ≥ 0.")
+    if percent_increase < 0 or percent_increase > 150:
+        raise ValueError("Percent increase must be in [0, 150].")
+    if not (0 <= discount < 1):
+        raise ValueError("Discount must be in [0, 1).")
+
+    inc = percent_increase / 100.0
+    sp_raw = purchase_price * (1.0 + inc)
+    lp_raw = sp_raw / (1.0 - discount)
+
+    sell_price = round_to_nearest_5(sp_raw)
+    list_price = round_to_nearest_5(lp_raw)
+    profit = int(round(sell_price - purchase_price))
+
+    return {
+        "sell_price": sell_price,
+        "list_price": list_price,
+        "profit": profit
+    }
+
+def compute_list_by(sell_by: date, lead_days: int = LIST_LEAD_DAYS) -> date:
+    """Return the date that is lead_days before sell_by."""
+    return sell_by - timedelta(days=lead_days)
+
+def days_until(target: date, today: date | None = None) -> int:
+    """Days from today until target (negative if in the past)."""
+    today = today or date.today()
+    return (target - today).days
+```
+
+---
+
+### `styles.py`
+
+```python
+import streamlit as st
+
+PRIMARY_BLUE = "#0A84FF"   # iOS-like blue
+NEUTRAL_GREY = "#8E8E93"   # iOS-like grey
+
+def inject_global_styles():
+    st.markdown(
+        f"""
+        <style>
+        /* Import Poppins */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+        html, body, [class*="css"] {{
+          font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+                       Ubuntu, Cantarell, 'Helvetica Neue', Arial, 'Apple Color Emoji',
+                       'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif !important;
+        }}
+
+        /* Centered layout max width */
+        .main .block-container {{
+          max-width: 860px;
+          padding-top: 1.5rem;
+          padding-bottom: 4rem;
+        }}
+
+        /* Summary banner chips */
+        .chip-row {{
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin: 8px 0 16px 0;
+        }}
+        .chip {{
+          display: inline-flex;
+          align-items: center;
+          padding: 10px 14px;
+          border-radius: 999px;
+          background: #F2F2F7; /* iOS grey background */
+          color: #111;
+          font-weight: 500;
+          box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }}
+        .chip .label {{
+          color: {NEUTRAL_GREY};
+          margin-right: 8px;
+          font-weight: 500;
+        }}
+        .chip .value {{
+          color: #111;
+          font-weight: 600;
+        }}
+
+        /* Warning badge */
+        .warn {{
+          background: #FFF4E5;
+          color: #7a3d00;
+          border: 1px solid #ffd9a8;
+        }}
+
+        /* Primary button look (Streamlit buttons inherit this) */
+        div.stButton > button:first-child {{
+          background: {PRIMARY_BLUE};
+          color: white;
+          border: none;
+          border-radius: 999px;
+          padding: 10px 16px;
+          font-weight: 600;
+          box-shadow: 0 2px 6px rgba(10,132,255,0.25);
+        }}
+        div.stButton > button:first-child:hover {{
+          filter: brightness(1.05);
+        }}
+
+        /* Metric-like cards (used for outputs) */
+        .metric-card {{
+          background: #FFFFFF;
+          border-radius: 16px;
+          padding: 16px 18px;
+          box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+          border: 1px solid #eee;
+          margin-bottom: 12px;
+        }}
+        .metric-title {{
+          color: {NEUTRAL_GREY};
+          font-weight: 500;
+          font-size: 0.95rem;
+          margin-bottom: 6px;
+        }}
+        .metric-value {{
+          font-size: 1.4rem;
+          font-weight: 700;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+def chip(label: str, value: str, warn: bool = False):
+    css_class = "chip warn" if warn else "chip"
+    st.markdown(
+        f"""
+        <div class="chip-row">
+          <div class="{css_class}">
+            <span class="label">{label}</span>
+            <span class="value">{value}</span>
+          </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+def chip_row(items: list[tuple[str, str]], warning_text: str | None = None):
+    chips_html = "".join(
+        [f'<div class="chip"><span class="label">{lbl}</span><span class="value">{val}</span></div>'
+         for (lbl, val) in items]
+    )
+    warn_html = f'<div class="chip warn"><span class="value">{warning_text}</span></div>' if warning_text else ""
+    st.markdown(
+        f"""
+        <div class="chip-row">
+          {chips_html}
+          {warn_html}
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+```
+
+---
+
+### `app.py`
+
+```python
+from __future__ import annotations
+import streamlit as st
+from datetime import date
+from dateutil.relativedelta import relativedelta
+
+from calc import (
+    DISCOUNT_DEFAULT, LIST_LEAD_DAYS,
+    compute_prices, compute_list_by, days_until, format_date_long
+)
+from styles import inject_global_styles, chip_row
+
+FURNITURE_OPTIONS = ["Dresser", "Nightstand", "Couch", "Chair", "Table", "Bed", "Other"]
+PCT_OPTIONS = list(range(0, 151, 5))  # 0..150 by 5
+DEFAULT_PCT = 30
+
+def fmt_money(n: int | float) -> str:
+    return f"${n:,.0f}"
+
+def main():
+    st.set_page_config(page_title="FlipCalc — List/Sell Planner", layout="centered")
+    inject_global_styles()
+
+    st.title("FlipCalc — List/Sell Planner")
+    st.caption("Plan when to list and what to list/sell for. Simple inputs, iOS-style UI. No log or persistence in MVP.")
+
+    # --- Inputs / Outputs layout
+    col_left, col_right = st.columns([1, 1], gap="large")
+
+    # Left column — Inputs
+    with col_left:
+        item = st.selectbox("Furniture Type", FURNITURE_OPTIONS, index=0)
+
+        # Dates
+        today = date.today()
+        default_purchase = today
+        default_sell_by = today + relativedelta(days=30)
+
+        purchase_date = st.date_input("Purchase Date", value=default_purchase)
+        sell_by = st.date_input("Target Sell-By Date", value=default_sell_by)
+
+        # Validate date order
+        if sell_by < purchase_date:
+            st.error("Sell-By date must be on or after Purchase date.")
+            st.stop()
+
+        # Money + % increase
+        purchase_price = st.number_input("Purchase Price ($)", min_value=0, step=1, value=0)
+        pct_idx = PCT_OPTIONS.index(DEFAULT_PCT) if DEFAULT_PCT in PCT_OPTIONS else 0
+        percent_increase = st.selectbox("% Increase (linear)", options=PCT_OPTIONS, index=pct_idx,
+                                        help="Increase over purchase price; rounded to nearest $5 for outputs.")
+
+    # Derived dates
+    list_by = compute_list_by(sell_by, LIST_LEAD_DAYS)
+    days_to_list = days_until(list_by, today=today)
+    days_to_sell = days_until(sell_by, today=today)
+
+    # Pricing calcs (uses static 15% discount)
+    prices = compute_prices(float(purchase_price), int(percent_increase), discount=DISCOUNT_DEFAULT)
+    sell_price = prices["sell_price"]
+    list_price = prices["list_price"]
+    profit = prices["profit"]
+
+    # Summary banner (top)
+    banner_items = [
+        ("List by", format_date_long(list_by)),
+        ("List", fmt_money(list_price)),
+        ("Target sell", fmt_money(sell_price)),
+        ("Profit", fmt_money(profit)),
+    ]
+    warn_text = "Heads up: Your list-by date has already passed." if days_to_list < 0 else None
+    chip_row(banner_items, warning_text=warn_text)
+
+    # Right column — Outputs
+    with col_right:
+        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+        st.markdown('<div class="metric-title">List-By Date</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="metric-value">{format_date_long(list_by)}</div>', unsafe_allow_html=True)
+        st.caption("ℹ️ We recommend listing 14 days before your sell-by date.")
+        st.markdown('</div>', unsafe_allow_html=True)
+
+        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+        st.markdown('<div class="metric-title">Days until List-By</div>', unsafe_allow_html=True)
+        list_label = f"{abs(days_to_list)} days" if days_to_list >= 0 else f"Overdue by {abs(days_to_list)} days"
+        st.markdown(f'<div class="metric-value">{list_label}</div>', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+
+        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+        st.markdown('<div class="metric-title">Days until Sell-By</div>', unsafe_allow_html=True)
+        sell_label = f"{abs(days_to_sell)} days" if days_to_sell >= 0 else f"Past by {abs(days_to_sell)} days"
+        st.markdown(f'<div class="metric-value">{sell_label}</div>', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+
+        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+        st.markdown('<div class="metric-title">Target List Price</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="metric-value">{fmt_money(list_price)}</div>', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+
+        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+        st.markdown('<div class="metric-title">Target Sell Price</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="metric-value">{fmt_money(sell_price)}</div>', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+
+        st.markdown('<div class="metric-card">', unsafe_allow_html=True)
+        st.markdown('<div class="metric-title">Profit</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="metric-value">{fmt_money(profit)}</div>', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    # Footer / notes
+    st.caption("Discount from list→sell is fixed at 15% in this MVP. Prices are rounded to the nearest $5.")
+
+if __name__ == "__main__":
+    main()
+```
+
+---
+
+### `README.md`
+
+````markdown
+# FlipCalc — List/Sell Planner (MVP)
+
+A single-screen Streamlit app to plan when to list your flipped furniture and what to list/sell it for.
+
+## Features
+- Furniture dropdown (Dresser, Nightstand, Couch, Chair, Table, Bed, Other)
+- Purchase Date & Target Sell-By Date (calendar pickers)
+- Auto List-By Date = Sell-By − 14 days (tooltip shown)
+- Linear % increase over purchase price (0–150%, step 5; default 30%)
+- Static 15% discount from List → Sell
+- Outputs: List-By Date, Days to List/Sell, Target List Price, Target Sell Price, Profit
+- iOS-inspired UI: Poppins font, rounded buttons, subtle shadows
+
+## Math
+- `Sell Price (raw) = Purchase Price × (1 + % increase)`
+- `List Price (raw) = Sell Price / (1 − 0.15)`
+- Prices rounded to nearest $5; Profit = (rounded Sell) − Purchase
+
+## Run
+```bash
+pip install -r requirements.txt
+streamlit run app.py
+````
+
+No external integrations. No persistence. MVP for Sprint-1 portfolio.
+
+```
+
+---
+
+**Done.**
+```
